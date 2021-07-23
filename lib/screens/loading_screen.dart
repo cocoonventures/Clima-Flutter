@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:clima/services/location.dart';
+import 'package:pretty_json/pretty_json.dart';
+import '/services/open_weather.dart';
+import 'dart:convert';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -7,7 +10,8 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  Position _pos;
+  Location _loc = Location();
+  Map<String, dynamic> _weather = Map();
 
   @override
   void initState() {
@@ -16,24 +20,26 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void getLocation() async {
-    try {
-      _pos = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.low);
-    } catch (e) {
-      print('getLocation> $e');
-    }
-    printLocation();
+    await _loc.getCurrentLocation();
   }
 
-  void printLocation() {
-    print('BIGbrother sees you at $_pos');
+  Future<void> getWeather() async {
+    var data = await OpenWeather.getData(
+        {'lat': _loc.latitude.toString(), 'lon': _loc.longitude.toString()});
+
+    _weather = data['weather'][0];
+    print("data JSON object");
+    printPrettyJson(data);
+    print("weather");
+    printPrettyJson(_weather);
   }
 
   @override
   Widget build(BuildContext context) {
+    getWeather();
     return Scaffold(
       body: Center(
-        child: Text('BIGbrother sees you at $_pos'),
+        child: Text('BIGbrother sees you at ${_loc.position()}'),
       ),
     );
   }
