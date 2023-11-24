@@ -2,11 +2,15 @@ import 'package:clima/screens/location_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:clima/services/location.dart';
 import 'package:pretty_json/pretty_json.dart';
-import '/services/open_weather.dart';
+import 'package:clima/services/open_weather.dart';
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingScreen extends StatefulWidget {
+
+  // final locationWeather;
+
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
 }
@@ -14,7 +18,7 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   Location _loc = Location();
   Map<String, dynamic> _weather = Map();
-  String _cityName;
+  String? _cityName;
 
   @override
   void initState() {
@@ -32,7 +36,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
         {'lat': _loc.latitude.toString(), 'lon': _loc.longitude.toString()});
 
     _weather.clear();
-    _weather..addAll(data['weather'][0])..addAll(data['main']);
+    _weather
+      ..addAll(data['weather'][0])
+      ..addAll(data['main']);
     fTemps();
     _cityName = data['name'];
 
@@ -60,7 +66,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   double roundDouble(double value, int places) {
-    double mod = pow(10.0, places);
+    double mod = pow(10.0, places) as double;
     return ((value * mod).round().toDouble() / mod);
   }
 
@@ -68,7 +74,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('BIGbrother sees you at ${_loc.position()}'),
+        child: SpinKitWaveSpinner(color: Colors.orange[300]!,size: 100.0, waveColor: Colors.amberAccent!,),
+        // Text('BIGbrother sees you at ${_loc.position()}'),
       ),
     );
   }

@@ -15,13 +15,14 @@ class OpenWeather {
     return await networkNinja.getData();
   }
 
-  static String buildURL({String type = 'geo', Map<String, String> hash}) {
-    String url = api_url[type];
+  static String buildURL({String type = 'geo', required Map<String, String> hash}) {
+    String url = api_url[type] ?? "";
 
     url = url.replaceAll('{API key}', API_KEY);
     hash.forEach((key, value) {
       url = url.replaceAll('\{$key\}', value);
     });
+
     return url;
   }
 }

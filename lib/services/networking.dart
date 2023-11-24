@@ -1,4 +1,4 @@
-import 'package:http/http.dart' as http;
+ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class NetworkNinja {
@@ -9,7 +9,7 @@ class NetworkNinja {
     Uri uri = Uri.parse(url);
     print('getData: attempting url: $url');
 
-    http.Response response;
+    http.Response? response;
     try {
       response = await http.get(uri);
     } catch (e) {
@@ -17,10 +17,10 @@ class NetworkNinja {
       print('Error: $e');
     }
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response?.body) ?? {};
+    if (response?.statusCode == 200) {
+      return jsonDecode(response?.body ?? "") ?? {};
     } else {
-      print('Status not OK. Code[${response.statusCode}]');
+      print('Status not OK. Code[${response?.statusCode}]');
       return {};
     }
   }

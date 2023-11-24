@@ -18,7 +18,7 @@ void task1() {
 
 Future<String> task2() async {
   Duration three_sec = Duration(seconds: 3);
-  String result;
+  String result = "";
   await Future.delayed(three_sec, () {
     result = 'task 2 data';
     print('Task 2 complete');
