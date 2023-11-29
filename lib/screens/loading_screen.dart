@@ -8,9 +8,6 @@ import 'dart:math';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingScreen extends StatefulWidget {
-
-  // final locationWeather;
-
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
 }
@@ -35,26 +32,30 @@ class _LoadingScreenState extends State<LoadingScreen> {
     Map<String, dynamic> data = await OpenWeather.getData(
         {'lat': _loc.latitude.toString(), 'lon': _loc.longitude.toString()});
 
+    printPrettyJson(data);
     _weather.clear();
     _weather
       ..addAll(data['weather'][0])
       ..addAll(data['main']);
+    _weather['city_name'] = data['name']; // ..addEntries(data['name']);
     fTemps();
     _cityName = data['name'];
 
     print("The weather in $_cityName is:");
     printPrettyJson(_weather);
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return LocationScreen();
+      return LocationScreen(
+        locationWeather: _weather,
+      );
     }));
   }
 
   // Convert all K to F
   void fTemps() {
-    _weather['temp'] = k2f(_weather['temp']);
-    _weather['feels_like'] = k2f(_weather['feels_like']);
-    _weather['temp_min'] = k2f(_weather['temp_min']);
-    _weather['temp_max'] = k2f(_weather['temp_max']);
+    _weather['temp'] = k2f(_weather['temp'].toDouble());
+    _weather['feels_like'] = k2f(_weather['feels_like'].toDouble());
+    _weather['temp_min'] = k2f(_weather['temp_min'].toDouble());
+    _weather['temp_max'] = k2f(_weather['temp_max'].toDouble());
   }
 
   // Convert a single double K to F
@@ -74,7 +75,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SpinKitWaveSpinner(color: Colors.orange[300]!,size: 100.0, waveColor: Colors.amberAccent!,),
+        child: SpinKitWaveSpinner(
+          color: Colors.orange[300]!,
+          size: 100.0,
+          waveColor: (Colors.amberAccent)!,
+        ),
         // Text('BIGbrother sees you at ${_loc.position()}'),
       ),
     );
