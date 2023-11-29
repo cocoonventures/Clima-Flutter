@@ -40,6 +40,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     _weather['city_name'] = data['name']; // ..addEntries(data['name']);
     fTemps();
     _cityName = data['name'];
+    _weather['condition'] = _weather['id'];
 
     print("The weather in $_cityName is:");
     printPrettyJson(_weather);
