@@ -1,33 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
 import 'package:clima/services/weather.dart';
+import 'package:pretty_json/pretty_json.dart';
+import 'dart:core';
 
 class LocationScreen extends StatefulWidget {
-  LocationScreen({this.locationWeather});
+  LocationScreen({required this.locationWeather});
 
-  final locationWeather;
+  final Weather locationWeather;
 
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-  WeatherModel weatherModel = WeatherModel();
+  // WeatherModel weatherModel = WeatherModel();
 
   late double temp;
   late String main;
   late String desc;
   late String icon;
-  late double feels_like;
-  late double low;
-  late double high;
-  late int condition;
-  late int pressure;
-  late int humidity;
-  late int? sea_level;
-  late int? grnd_level;
   late String city;
-
+  late int condition;
   late String weatherMsg;
 
   @override
@@ -37,22 +31,17 @@ class _LocationScreenState extends State<LocationScreen> {
     super.initState();
   }
 
-  void updateUI(dynamic weather) {
+  void updateUI(Weather weather) {
+    print("[Inside updateUI]");
+    // printPrettyJson(weather);
     setState(() {
-      temp = weather['temp'];
-      main = weather['main'];
-      desc = weather['description'];
-      icon = weather['icon'];
-      feels_like = weather['feels_like'];
-      low = weather['temp_min'];
-      high = weather['temp_max'];
-      condition = weather['condition'];
-      pressure = weather['pressure'];
-      humidity = weather['humidity'];
-      sea_level = weather['sea_level'];
-      grnd_level = weather['grnd_level'];
-      city = weather['city_name'];
-      weatherMsg = weatherModel.getMessage(temp.toInt());
+      temp = weather.temp;
+      main = weather.main;
+      desc = weather.desc;
+      icon = weather.icon;
+      city = weather.city;
+      condition = weather.condition;
+      weatherMsg = weather.weatherMsg;
     });
   }
 
@@ -94,20 +83,21 @@ class _LocationScreenState extends State<LocationScreen> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      '${temp.toInt()}°',
-                      style: kTempTextStyle,
+                  padding: EdgeInsets.only(left: 15.0),
+                  child: Center(
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          '${temp.toInt()}°',
+                          style: kTempTextStyle,
+                        ),
+                        Text(
+                          '$icon',
+                          style: kConditionTextStyle,
+                        ),
+                      ],
                     ),
-                    Text(
-                      '${weatherModel.getWeatherIcon(condition)}',
-                      style: kConditionTextStyle,
-                    ),
-                  ],
-                ),
-              ),
+                  )),
               Padding(
                 padding: EdgeInsets.only(right: 15.0),
                 child: Text(
